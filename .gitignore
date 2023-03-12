@@ -1,1 +1,4 @@
 /back/.env
+/back/node_modules
+front/template.png/
+/back/package-lock.json
