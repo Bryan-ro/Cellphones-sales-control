@@ -1,0 +1,40 @@
+@import url(./universal.css);
+
+.model-title {
+    text-align: center;
+    font-size: 25px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    width: 575px;
+}
+
+.modelos {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+    width: 575px;
+    overflow-x: auto;  
+}
+
+.modelos::-webkit-scrollbar {
+    width: 100px;       
+}
+  
+.modelos::-webkit-scrollbar-track {
+    background: rgb(119, 119, 119);   
+}
+  
+.modelos::-webkit-scrollbar-thumb {
+    background-color: rgb(87, 87, 87);    
+    border-radius: 20px;       
+}
+
+
+.moldura {
+    min-width: 250px;
+    max-width: 250px;
+    height: 300px;
+    margin: 0 auto;
+    height: 300px;
+}
