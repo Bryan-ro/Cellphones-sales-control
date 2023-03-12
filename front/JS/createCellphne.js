@@ -1,12 +1,12 @@
 const baseUrl = "http://localhost:4444";
 const infos = {
-    imei: document.getElementById("imei"),
-    model: null,
-    observations: document.getElementById("observacoes")
+  imei: document.getElementById("imei"),
+  model: null,
+  observations: document.getElementById("observacoes")
 };
 const createButton = document.getElementById("cellForm");
 
-function createCell () {
+function createCell() {
   event.preventDefault();
   axios.post(`${baseUrl}/device-info`, {
     imei: infos.imei.value,
@@ -19,21 +19,33 @@ function createCell () {
       background: "#121212",
     })
   }).catch(err => {
-    swal.fire({
-      title: "Erro ao cadastrar.",
-      text: `Verifique se um modelo foi selecionado. Se necessario entre em contato com o suporte.`,
-      icon: "error",
-      background: "#121212"
-    })
+    if (err.response.status === 422) {
+      swal.fire({
+        title: "Erro ao cadastrar.",
+        text: `Verifique se um modelo foi selecionado. Se necessario entre em contato com o suporte.`,
+        icon: "error",
+        background: "#121212"
+      })
+    } else if (err.response.status === 409) {
+      swal.fire({
+        title: "Erro ao cadastrar.",
+        text: `O IMEI informado já existe, verifique se você digitou corretamente. Se necessario entre em contato com o suporte.`,
+        icon: "error",
+        background: "#121212"
+      })
+    }
+
+
+    console.log(err.response.status)
   })
 }
 
-async function viewModels () {
-    const models = await axios.get(`${baseUrl}/model-info`);
-    const divModel = document.querySelector(".modelos");
+async function viewModels() {
+  const models = await axios.get(`${baseUrl}/model-info`);
+  const divModel = document.querySelector(".modelos");
 
-    for(i in models.data) {
-        divModel.innerHTML += `
+  for (i in models.data) {
+    divModel.innerHTML += `
         <div class="rounded-2xl bg-gray-800 py-10 text-center  ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center border-indigo-600 cursor-pointer moldura" id="${models.data[i].id}">
         <div class="mx-auto max-w-xs px-8">
           <p class="text-base font-semibold text-gray-100">Samsung</p>
@@ -56,27 +68,27 @@ async function viewModels () {
         </div>
       </div>
         `;
-    }
-    
-    const selectModelButton = document.querySelectorAll(".moldura")
-    
-    selectModelButton.forEach(button => {
-        button.addEventListener("click", selectModel);
-    })
+  }
+
+  const selectModelButton = document.querySelectorAll(".moldura")
+
+  selectModelButton.forEach(button => {
+    button.addEventListener("click", selectModel);
+  })
 }
 
-function selectModel () {
-    // Desmarcar todos os modelos selecionados
-    const allModelButtons = document.querySelectorAll(".moldura");
+function selectModel() {
+  // Desmarcar todos os modelos selecionados
+  const allModelButtons = document.querySelectorAll(".moldura");
 
-    for(let i = 0; i < allModelButtons.length; i++) {
-      allModelButtons[i].classList.remove("border");
-    }
-  
-    // Selecionar o ultimo clicado
-    const model = event.target.closest(".moldura");
-    infos.model = model.id;
-    model.classList.toggle("border");
+  for (let i = 0; i < allModelButtons.length; i++) {
+    allModelButtons[i].classList.remove("border");
+  }
+
+  // Selecionar o ultimo clicado
+  const model = event.target.closest(".moldura");
+  infos.model = model.id;
+  model.classList.toggle("border");
 }
 
 

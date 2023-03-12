@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require("./config/configDb.js");
 const { CellPhone, Model } = require("./models/ModelAndCellphone.js");
+const middlewares = require("./middlewares/cellPhonesMiddlewares.js")
 const cors = require("cors");
 
 db.authenticate()
@@ -47,7 +48,7 @@ app.get("/device-info/:id", async (req, res) => {
     !device ? res.status(404).json({ message: "This IMEI does not exist" }) : res.status(200).json(device);
 })
 
-app.post("/device-info", (req, res) => {
+app.post("/device-info", middlewares.verifyIfCellPhoneExists, (req, res) => {
     const { imei, observations, modelId } = req.body;
     
     CellPhone.create({
